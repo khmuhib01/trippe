@@ -1,0 +1,11 @@
+export const stPay = '/assets/images/logos/payment-logo/stPay.svg';
+export const amexCard = '/assets/images/logos/payment-logo/amexCard.svg';
+export const bkash = '/assets/images/logos/payment-logo/bkash.svg';
+export const dbbl = '/assets/images/logos/payment-logo/dbbl.svg';
+export const dinnersClub = '/assets/images/logos/payment-logo/dinners-club.svg';
+export const masterCard = '/assets/images/logos/payment-logo/masterCard.svg';
+export const nagad = '/assets/images/logos/payment-logo/nagad.svg';
+export const ok = '/assets/images/logos/payment-logo/ok.svg';
+export const tap = '/assets/images/logos/payment-logo/tap.svg';
+export const upay = '/assets/images/logos/payment-logo/upay.svg';
+export const visaCard = '/assets/images/logos/payment-logo/visaCard.svg';

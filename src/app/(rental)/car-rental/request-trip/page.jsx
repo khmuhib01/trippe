@@ -2,7 +2,7 @@
 import {Back, Edit} from '@/ui-share/Icon';
 import {stPay} from '@/ui-share/Image';
 import Image from 'next/image';
-import React, {useState} from 'react';
+import {useState, useEffect} from 'react';
 import {useRouter} from 'next/navigation';
 import dayjs from 'dayjs';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
@@ -23,11 +23,33 @@ export default function RequestTripPage() {
 	const [isRoundTrip, setIsRoundTrip] = useState(false);
 	const [tripNote, setTripNote] = useState('');
 	const [promoCode, setPromoCode] = useState('');
+	const [showPromoPopup, setShowPromoPopup] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [appliedPromo, setAppliedPromo] = useState(null);
 
 	const handleNext = () => {
-		// You can add form validation here if needed
-		router.push('/car-rental/review-trip-request'); // Navigate to review page
+		setIsSubmitting(true);
+		// Simulate form submission
+		setTimeout(() => {
+			router.push('/car-rental/review-trip-request');
+		}, 1000);
 	};
+
+	const handleApplyPromo = () => {
+		setAppliedPromo(promoCode);
+		setShowPromoPopup(false);
+	};
+
+	// Close popup when clicking outside
+	useEffect(() => {
+		const handleClickOutside = (e) => {
+			if (showPromoPopup && e.target.classList.contains('backdrop')) {
+				setShowPromoPopup(false);
+			}
+		};
+		document.addEventListener('click', handleClickOutside);
+		return () => document.removeEventListener('click', handleClickOutside);
+	}, [showPromoPopup]);
 
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -79,6 +101,7 @@ export default function RequestTripPage() {
 											type="text"
 											placeholder="Search pickup location"
 											className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+											required
 										/>
 									</div>
 
@@ -116,6 +139,7 @@ export default function RequestTripPage() {
 											type="text"
 											placeholder="Search drop off location"
 											className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+											required
 										/>
 									</div>
 								</div>
@@ -254,31 +278,174 @@ export default function RequestTripPage() {
 									<p className="text-xs text-gray-500 text-right mt-1">230 Character max.</p>
 								</div>
 
-								{/* Promo code field */}
-								<div className="mb-8">
+								{/* Promo Code Section */}
+								<div className="mb-6">
 									<label className="block text-sm font-medium text-gray-700 mb-1">Promo Code</label>
-									<div className="flex gap-2">
-										<input
-											type="text"
-											placeholder="Enter promo code"
-											value={promoCode}
-											onChange={(e) => setPromoCode(e.target.value)}
-											className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-										/>
-									</div>
+									{appliedPromo ? (
+										<div className="flex justify-between items-center">
+											<span className="text-green-600 font-medium">Applied: {appliedPromo}</span>
+											<button onClick={() => setAppliedPromo(null)} className="text-red-500 text-sm hover:text-red-700">
+												Remove
+											</button>
+										</div>
+									) : (
+										<button
+											onClick={() => setShowPromoPopup(true)}
+											className="text-blue-500 hover:text-blue-700 text-sm flex items-center"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="h-4 w-4 mr-1"
+												fill="none"
+												viewBox="0 0 24 24"
+												stroke="currentColor"
+											>
+												<path
+													strokeLinecap="round"
+													strokeLinejoin="round"
+													strokeWidth={2}
+													d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+												/>
+											</svg>
+											Add Promo Code
+										</button>
+									)}
 								</div>
 
-								{/* Next button */}
+								{/* Next button with loading state */}
 								<button
-									className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200"
 									onClick={handleNext}
+									disabled={isSubmitting}
+									className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center ${
+										isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
+									}`}
 								>
-									Next →
+									{isSubmitting ? (
+										<>
+											<svg
+												className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+												xmlns="http://www.w3.org/2000/svg"
+												fill="none"
+												viewBox="0 0 24 24"
+											>
+												<circle
+													className="opacity-25"
+													cx="12"
+													cy="12"
+													r="10"
+													stroke="currentColor"
+													strokeWidth="4"
+												></circle>
+												<path
+													className="opacity-75"
+													fill="currentColor"
+													d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+												></path>
+											</svg>
+											Processing...
+										</>
+									) : (
+										'Next →'
+									)}
 								</button>
 							</div>
 						</div>
 					</div>
 				</div>
+
+				{/* Modern Promo Popup */}
+				{showPromoPopup && (
+					<div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300 backdrop">
+						<div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all duration-300 scale-100">
+							<div className="p-6">
+								<div className="flex justify-between items-start">
+									<div>
+										<h2 className="text-2xl font-bold text-gray-900">Promo Code</h2>
+										<p className="text-gray-500 mt-1">Enter your discount code</p>
+									</div>
+									<button
+										onClick={() => setShowPromoPopup(false)}
+										className="text-gray-400 hover:text-gray-500 transition-colors p-1 -mr-1"
+									>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											className="h-6 w-6"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+										>
+											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+										</svg>
+									</button>
+								</div>
+
+								<div className="mt-6 relative">
+									<input
+										type="text"
+										value={promoCode}
+										onChange={(e) => setPromoCode(e.target.value)}
+										placeholder="e.g. SUMMER20"
+										className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg font-medium placeholder-gray-400"
+										autoFocus
+									/>
+									{promoCode && (
+										<button
+											onClick={() => setPromoCode('')}
+											className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+										>
+											<svg
+												xmlns="http://www.w3.org/2000/svg"
+												className="h-5 w-5"
+												viewBox="0 0 20 20"
+												fill="currentColor"
+											>
+												<path
+													fillRule="evenodd"
+													d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z"
+													clipRule="evenodd"
+												/>
+											</svg>
+										</button>
+									)}
+								</div>
+
+								{/* Promo Examples */}
+								<div className="mt-4">
+									<h4 className="text-sm font-medium text-gray-500 mb-2">Try these codes:</h4>
+									<div className="flex flex-wrap gap-2">
+										{['SUMMER20', 'FREERIDE', 'WELCOME10'].map((code) => (
+											<button
+												key={code}
+												onClick={() => setPromoCode(code)}
+												className="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-full hover:bg-gray-100 transition-colors hover:border-blue-300"
+											>
+												{code}
+											</button>
+										))}
+									</div>
+								</div>
+
+								<div className="mt-6 grid grid-cols-2 gap-3">
+									<button
+										onClick={() => setShowPromoPopup(false)}
+										className="px-4 py-3 border border-gray-200 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+									>
+										Cancel
+									</button>
+									<button
+										onClick={handleApplyPromo}
+										disabled={!promoCode}
+										className={`px-4 py-3 rounded-lg font-medium text-white transition-colors ${
+											!promoCode ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+										}`}
+									>
+										Apply Code
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
 			</section>
 		</LocalizationProvider>
 	);

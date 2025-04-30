@@ -8,7 +8,7 @@ export default function Header() {
 	const [openSubMenu, setOpenSubMenu] = useState(null);
 
 	const menuItems = [
-		{name: 'Car Rental', href: '#'},
+		{name: 'Car Rental', href: '/car-rental'},
 		{name: 'Ride Sharing', href: '#'},
 		{name: 'Ticketing', href: '#'},
 		{name: 'Hotel Booking', href: '#'},
@@ -29,7 +29,9 @@ export default function Header() {
 		<header className="bg-white text-gray-900 py-4 shadow-sm transition-colors duration-300 sticky top-0 z-50">
 			<div className="container mx-auto flex items-center justify-between px-4">
 				{/* Logo */}
-				<h1 className="text-xl font-bold">My Booking</h1>
+				<Link href="/" className="flex items-center">
+					<h1 className="text-xl font-bold">My Booking</h1>
+				</Link>
 
 				{/* Desktop Menu */}
 				<nav className="hidden lg:flex space-x-6 items-center mx-auto">

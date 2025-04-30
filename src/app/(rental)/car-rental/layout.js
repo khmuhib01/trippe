@@ -3,6 +3,7 @@ import './../../globals.css';
 import CarRentalHeader from '@/components/inc/car-rental/CarRentalHeader';
 import MainHeader from '@/components/inc/MainHeader';
 import MainFooter from '@/components/inc/MainFooter';
+import CarRentalFooter from '@/components/inc/car-rental/CarRentalFooter';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -21,13 +22,10 @@ export const metadata = {
 
 export default function CarRentalLayout({children}) {
 	return (
-		<html lang="en">
-			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				<MainHeader />
-				<CarRentalHeader />
-				{children}
-				<MainFooter />
-			</body>
-		</html>
+		<div>
+			<CarRentalHeader />
+			{children}
+			<CarRentalFooter />
+		</div>
 	);
 }

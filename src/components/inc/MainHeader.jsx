@@ -9,18 +9,18 @@ export default function MainHeader() {
 
 	const menuItems = [
 		{name: 'Car Rental', href: '/car-rental'},
-		{name: 'Ride Sharing', href: '#'},
-		{name: 'Ticketing', href: '#'},
-		{name: 'Hotel Booking', href: '#'},
-		{name: 'Food Delivery', href: '#'},
-		{name: 'Holiday', href: '#'},
+		{name: 'Ride Sharing', href: '/ride-sharing'},
+		{name: 'Ticketing', href: '/ticketing'},
+		{name: 'Hotel Booking', href: '/hotel-booking'},
+		{name: 'Food Delivery', href: '/food-delivery'},
+		{name: 'Holiday', href: '/holiday'},
 		{
 			name: 'Visa',
-			href: '#',
+			href: '/visa',
 			submenu: [
-				{name: 'Visa Application', href: '#'},
-				{name: 'Visa Guide', href: '#'},
-				{name: 'Visa Transit', href: '#'},
+				{name: 'Visa Application', href: '/visa/application'},
+				{name: 'Visa Guide', href: '/visa/guide'},
+				{name: 'Visa Transit', href: '/visa/transit'},
 			],
 		},
 	];
@@ -28,7 +28,6 @@ export default function MainHeader() {
 	return (
 		<header className="bg-white text-gray-900 py-4 shadow-sm transition-colors duration-300 sticky top-0 z-50">
 			<div className="container mx-auto flex items-center justify-between px-4">
-				{/* Logo */}
 				<Link href="/" className="flex items-center">
 					<h1 className="text-xl font-bold">My Booking</h1>
 				</Link>
@@ -39,14 +38,13 @@ export default function MainHeader() {
 						<div key={item.name} className="relative group">
 							{item.submenu ? (
 								<>
-									<Link
-										href={item.href}
+									<button
+										type="button"
 										className="flex items-center hover:text-blue-600 transition-colors px-3 py-2 rounded-md text-sm font-medium text-gray-900"
 									>
 										{item.name}
 										<FiChevronDown className="ml-1 w-4 h-4" />
-									</Link>
-									{/* Hover Submenu */}
+									</button>
 									<div className="absolute left-1/2 transform -translate-x-1/2 top-full mt-2 bg-white shadow-md rounded-md overflow-hidden min-w-[180px] hidden group-hover:block z-20">
 										{item.submenu.map((subitem) => (
 											<Link
@@ -96,14 +94,12 @@ export default function MainHeader() {
 					mobileMenuOpen ? 'translate-x-0' : 'translate-x-full'
 				} sm:hidden`}
 			>
-				{/* Close Button */}
 				<div className="flex justify-end p-4">
 					<button className="p-2 text-gray-700 hover:bg-gray-100" onClick={() => setMobileMenuOpen(false)}>
 						<FiX className="w-6 h-6" />
 					</button>
 				</div>
 
-				{/* Mobile Menu Items */}
 				<nav className="flex flex-col px-6 space-y-2">
 					{menuItems.map((item) => (
 						<div key={item.name}>
@@ -147,7 +143,7 @@ export default function MainHeader() {
 				</nav>
 			</div>
 
-			{/* Background Overlay */}
+			{/* Overlay */}
 			{mobileMenuOpen && (
 				<div
 					className="fixed inset-0 bg-black bg-opacity-40 z-40 lg:hidden"

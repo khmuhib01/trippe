@@ -2,7 +2,8 @@
 import {Back, Edit} from '@/ui-share/Icon';
 import {stPay} from '@/ui-share/Image';
 import Image from 'next/image';
-import React, {useEffect, useState} from 'react';
+import React, {useState} from 'react';
+import {useRouter} from 'next/navigation';
 import dayjs from 'dayjs';
 import {LocalizationProvider} from '@mui/x-date-pickers/LocalizationProvider';
 import {AdapterDayjs} from '@mui/x-date-pickers/AdapterDayjs';
@@ -12,7 +13,7 @@ import {DemoContainer} from '@mui/x-date-pickers/internals/demo';
 import {Switch} from '@mui/material';
 
 export default function RequestTripPage() {
-	const [mounted, setMounted] = useState(false);
+	const router = useRouter();
 	const [showViaPoint, setShowViaPoint] = useState(false);
 	const [viaPoint, setViaPoint] = useState('');
 	const [selectedDate, setSelectedDate] = useState(dayjs());
@@ -21,16 +22,16 @@ export default function RequestTripPage() {
 	const [returnTime, setReturnTime] = useState(dayjs());
 	const [isRoundTrip, setIsRoundTrip] = useState(false);
 	const [tripNote, setTripNote] = useState('');
+	const [promoCode, setPromoCode] = useState('');
 
-	useEffect(() => {
-		setMounted(true);
-	}, []);
-
-	if (!mounted) return null;
+	const handleNext = () => {
+		// You can add form validation here if needed
+		router.push('/car-rental/review-trip-request'); // Navigate to review page
+	};
 
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs}>
-			<section className="bg-[#FEF8F7] min-h-screen py-8">
+			<section className="bg-[#FEF8F7] py-8">
 				<div className="container mx-auto">
 					<div className="flex justify-center">
 						<div className="w-full max-w-[600px] px-4">
@@ -240,7 +241,7 @@ export default function RequestTripPage() {
 								<hr className="my-6 border-gray-200" />
 
 								{/* Notes text area */}
-								<div className="mb-8">
+								<div className="mb-6">
 									<label className="block text-sm font-medium text-gray-700 mb-1">Trip Notes</label>
 									<textarea
 										placeholder="Add any special instructions for your trip..."
@@ -253,8 +254,25 @@ export default function RequestTripPage() {
 									<p className="text-xs text-gray-500 text-right mt-1">230 Character max.</p>
 								</div>
 
+								{/* Promo code field */}
+								<div className="mb-8">
+									<label className="block text-sm font-medium text-gray-700 mb-1">Promo Code</label>
+									<div className="flex gap-2">
+										<input
+											type="text"
+											placeholder="Enter promo code"
+											value={promoCode}
+											onChange={(e) => setPromoCode(e.target.value)}
+											className="flex-1 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+										/>
+									</div>
+								</div>
+
 								{/* Next button */}
-								<button className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200">
+								<button
+									className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200"
+									onClick={handleNext}
+								>
 									Next
 								</button>
 							</div>

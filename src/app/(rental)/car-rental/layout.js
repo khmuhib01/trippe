@@ -1,7 +1,8 @@
 import {Geist, Geist_Mono} from 'next/font/google';
 import './../../globals.css';
-import Header from '@/components/inc/Header';
-import Footer from '@/components/inc/Footer';
+import CarRentalHeader from '@/components/inc/car-rental/CarRentalHeader';
+import MainHeader from '@/components/inc/MainHeader';
+import MainFooter from '@/components/inc/MainFooter';
 
 const geistSans = Geist({
 	variable: '--font-geist-sans',
@@ -22,10 +23,10 @@ export default function CarRentalLayout({children}) {
 	return (
 		<html lang="en">
 			<body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
-				<Header />
-				<h1>Extra Header</h1>
+				<MainHeader />
+				<CarRentalHeader />
 				{children}
-				<Footer />
+				<MainFooter />
 			</body>
 		</html>
 	);

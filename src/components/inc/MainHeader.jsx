@@ -3,7 +3,7 @@ import Link from 'next/link';
 import {useState} from 'react';
 import {FiChevronDown, FiMenu, FiX} from 'react-icons/fi';
 
-export default function Header() {
+export default function MainHeader() {
 	const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 	const [openSubMenu, setOpenSubMenu] = useState(null);
 

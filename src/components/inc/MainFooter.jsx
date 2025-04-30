@@ -4,7 +4,7 @@ import {FaFacebookF, FaTwitter, FaInstagram, FaYoutube, FaLinkedinIn} from 'reac
 import {stPay, amexCard, bkash, dbbl, dinnersClub, masterCard, nagad, ok, tap, upay, visaCard} from '@/ui-share/Image';
 import {useEffect, useRef} from 'react';
 
-export default function Footer() {
+export default function MainFooter() {
 	const canvasRef = useRef(null);
 
 	useEffect(() => {

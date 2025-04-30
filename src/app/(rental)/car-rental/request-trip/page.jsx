@@ -29,9 +29,10 @@ export default function RequestTripPage() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [appliedPromo, setAppliedPromo] = useState(null);
 	const [formValid, setFormValid] = useState(false);
-	// const [isModalOpen, setIsModalOpen] = useState(false);
 	const [isOpen, setIsOpen] = useState(false);
-	const [selectedVehicle, setSelectedVehicle] = useState('');
+	const [selectedVehicle, setSelectedVehicle] = useState('Minibus');
+	const [isApplyingPromo, setIsApplyingPromo] = useState(false);
+	const [isSavingVehicle, setIsSavingVehicle] = useState(false);
 
 	const vehicles = [
 		{name: 'Sedan Car', seats: '4 Seats'},
@@ -42,11 +43,6 @@ export default function RequestTripPage() {
 		{name: 'Luxury Car', seats: '4-7 Seats | BMW, Audi, SUVs & More'},
 		{name: 'Chander Gari', seats: "8-10 Seats | Available at Cox's Bazar & Sreemangal"},
 	];
-
-	const handleVehicleSelect = (vehicle) => {
-		setSelectedVehicle(vehicle.name);
-		setIsModalOpen(false);
-	};
 
 	// Check form validation whenever mandatory fields change
 	useEffect(() => {
@@ -65,20 +61,23 @@ export default function RequestTripPage() {
 	};
 
 	const handleApplyPromo = () => {
-		setAppliedPromo(promoCode);
-		setShowPromoPopup(false);
+		setIsApplyingPromo(true);
+		// Simulate API call
+		setTimeout(() => {
+			setAppliedPromo(promoCode);
+			setIsApplyingPromo(false);
+			setShowPromoPopup(false);
+		}, 800);
 	};
 
-	// Close popup when clicking outside
-	useEffect(() => {
-		const handleClickOutside = (e) => {
-			if (showPromoPopup && e.target.classList.contains('backdrop')) {
-				setShowPromoPopup(false);
-			}
-		};
-		document.addEventListener('click', handleClickOutside);
-		return () => document.removeEventListener('click', handleClickOutside);
-	}, [showPromoPopup]);
+	const handleSaveVehicle = () => {
+		setIsSavingVehicle(true);
+		// Simulate save operation
+		setTimeout(() => {
+			setIsSavingVehicle(false);
+			setIsOpen(false);
+		}, 600);
+	};
 
 	return (
 		<LocalizationProvider dateAdapter={AdapterDayjs}>
@@ -110,10 +109,12 @@ export default function RequestTripPage() {
 								<div className="mb-8">
 									<div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg">
 										<div className="flex items-center gap-4">
-											<Image src={stPay} alt="Minibus" width={40} height={40} />
+											<Image src={stPay} alt={selectedVehicle} width={40} height={40} />
 											<div>
-												<p className="font-medium text-gray-800">Minibus</p>
-												<p className="text-sm text-gray-500">22-28 Seats</p>
+												<p className="font-medium text-gray-800">{selectedVehicle}</p>
+												<p className="text-sm text-gray-500">
+													{vehicles.find((v) => v.name === selectedVehicle)?.seats || '22-28 Seats'}
+												</p>
 											</div>
 										</div>
 										<button onClick={() => setIsOpen(true)} className="text-blue-500 hover:text-blue-700">
@@ -412,7 +413,6 @@ export default function RequestTripPage() {
 									</button>
 								</div>
 
-								{/* Vehicle List */}
 								<div className="mt-6 space-y-3 max-h-[50vh] overflow-y-auto">
 									{vehicles.map((vehicle, index) => (
 										<div
@@ -448,7 +448,6 @@ export default function RequestTripPage() {
 									))}
 								</div>
 
-								{/* Action Buttons */}
 								<div className="mt-6 grid grid-cols-2 gap-3">
 									<button
 										onClick={() => setIsOpen(false)}
@@ -457,16 +456,41 @@ export default function RequestTripPage() {
 										Cancel
 									</button>
 									<button
-										onClick={() => {
-											// Save the selected vehicle
-											setIsOpen(false);
-										}}
-										disabled={!selectedVehicle}
-										className={`px-4 py-3 rounded-lg font-medium text-white transition-colors ${
-											!selectedVehicle ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+										onClick={handleSaveVehicle}
+										disabled={!selectedVehicle || isSavingVehicle}
+										className={`px-4 py-3 rounded-lg font-medium text-white transition-colors flex items-center justify-center ${
+											!selectedVehicle || isSavingVehicle
+												? 'bg-gray-300 cursor-not-allowed'
+												: 'bg-blue-600 hover:bg-blue-700'
 										}`}
 									>
-										Save Changes
+										{isSavingVehicle ? (
+											<>
+												<svg
+													className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+													xmlns="http://www.w3.org/2000/svg"
+													fill="none"
+													viewBox="0 0 24 24"
+												>
+													<circle
+														className="opacity-25"
+														cx="12"
+														cy="12"
+														r="10"
+														stroke="currentColor"
+														strokeWidth="4"
+													></circle>
+													<path
+														className="opacity-75"
+														fill="currentColor"
+														d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+													></path>
+												</svg>
+												Saving...
+											</>
+										) : (
+											'Save Changes'
+										)}
 									</button>
 								</div>
 							</div>
@@ -474,7 +498,7 @@ export default function RequestTripPage() {
 					</div>
 				)}
 
-				{/* Modern Promo Popup */}
+				{/* Promo Code Popup */}
 				{showPromoPopup && (
 					<div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300 backdrop">
 						<div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all duration-300 scale-100">
@@ -488,15 +512,7 @@ export default function RequestTripPage() {
 										onClick={() => setShowPromoPopup(false)}
 										className="text-gray-400 hover:text-gray-500 transition-colors p-1 -mr-1"
 									>
-										<svg
-											xmlns="http://www.w3.org/2000/svg"
-											className="h-6 w-6"
-											fill="none"
-											viewBox="0 0 24 24"
-											stroke="currentColor"
-										>
-											<path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-										</svg>
+										<X className="w-6 h-6" />
 									</button>
 								</div>
 
@@ -529,7 +545,6 @@ export default function RequestTripPage() {
 										</button>
 									)}
 								</div>
-
 								{/* Promo Examples */}
 								<div className="mt-4">
 									<h4 className="text-sm font-medium text-gray-500 mb-2">Try these codes:</h4>
@@ -545,7 +560,6 @@ export default function RequestTripPage() {
 										))}
 									</div>
 								</div>
-
 								<div className="mt-6 grid grid-cols-2 gap-3">
 									<button
 										onClick={() => setShowPromoPopup(false)}
@@ -555,12 +569,38 @@ export default function RequestTripPage() {
 									</button>
 									<button
 										onClick={handleApplyPromo}
-										disabled={!promoCode}
-										className={`px-4 py-3 rounded-lg font-medium text-white transition-colors ${
-											!promoCode ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+										disabled={!promoCode || isApplyingPromo}
+										className={`px-4 py-3 rounded-lg font-medium text-white transition-colors flex items-center justify-center ${
+											!promoCode || isApplyingPromo ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
 										}`}
 									>
-										Apply Code
+										{isApplyingPromo ? (
+											<>
+												<svg
+													className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+													xmlns="http://www.w3.org/2000/svg"
+													fill="none"
+													viewBox="0 0 24 24"
+												>
+													<circle
+														className="opacity-25"
+														cx="12"
+														cy="12"
+														r="10"
+														stroke="currentColor"
+														strokeWidth="4"
+													></circle>
+													<path
+														className="opacity-75"
+														fill="currentColor"
+														d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+													></path>
+												</svg>
+												Applying...
+											</>
+										) : (
+											'Apply Code'
+										)}
 									</button>
 								</div>
 							</div>

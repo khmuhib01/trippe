@@ -1,5 +1,5 @@
 'use client';
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import {Back} from '@/ui-share/Icon';
 import {stPay} from '@/ui-share/Image';
 import Image from 'next/image';
@@ -10,12 +10,30 @@ export default function ReviewTripRequest() {
 	const [showPromoPopup, setShowPromoPopup] = useState(false);
 	const [promoCode, setPromoCode] = useState('');
 	const [showFareInfo, setShowFareInfo] = useState(false);
+	const [isApplying, setIsApplying] = useState(false);
+	const [appliedPromo, setAppliedPromo] = useState(null);
 
+	// Handle promo code application
 	const handleApplyPromo = () => {
-		// Handle promo code application logic here
-		setShowPromoPopup(false);
-		// You would typically validate the promo code here
+		setIsApplying(true);
+		// Simulate API call
+		setTimeout(() => {
+			setAppliedPromo(promoCode);
+			setIsApplying(false);
+			setShowPromoPopup(false);
+		}, 1000);
 	};
+
+	// Close popup when clicking outside
+	useEffect(() => {
+		const handleClickOutside = (e) => {
+			if (showPromoPopup && e.target.classList.contains('backdrop')) {
+				setShowPromoPopup(false);
+			}
+		};
+		document.addEventListener('click', handleClickOutside);
+		return () => document.removeEventListener('click', handleClickOutside);
+	}, [showPromoPopup]);
 
 	return (
 		<section className="bg-[#FEF8F7] min-h-screen py-8">
@@ -87,15 +105,38 @@ export default function ReviewTripRequest() {
 								</div>
 							</div>
 
-							{/* Promo code */}
+							{/* Promo Code Section */}
 							<div className="mb-6">
-								<h3 className="text-sm font-medium text-gray-500">Promo</h3>
-								<p className="text-md font-medium text-gray-800 mb-2">
-									{promoCode ? `Applied: ${promoCode}` : 'No promo added'}
-								</p>
-								<button className="text-blue-500 hover:text-blue-700 text-sm" onClick={() => setShowPromoPopup(true)}>
-									{promoCode ? 'Change Promo' : '+ Add Promo'}
-								</button>
+								<h3 className="text-sm font-medium text-gray-500">Promo Code</h3>
+								{appliedPromo ? (
+									<div className="flex justify-between items-center mt-1">
+										<span className="text-green-600 font-medium">Applied: {appliedPromo}</span>
+										<button onClick={() => setAppliedPromo(null)} className="text-red-500 text-sm hover:text-red-700">
+											Remove
+										</button>
+									</div>
+								) : (
+									<button
+										onClick={() => setShowPromoPopup(true)}
+										className="mt-1 text-blue-500 hover:text-blue-700 text-sm flex items-center"
+									>
+										<svg
+											xmlns="http://www.w3.org/2000/svg"
+											className="h-4 w-4 mr-1"
+											fill="none"
+											viewBox="0 0 24 24"
+											stroke="currentColor"
+										>
+											<path
+												strokeLinecap="round"
+												strokeLinejoin="round"
+												strokeWidth={2}
+												d="M12 6v6m0 0v6m0-6h6m-6 0H6"
+											/>
+										</svg>
+										Add Promo Code
+									</button>
+								)}
 							</div>
 
 							{/* Additional note */}
@@ -108,11 +149,11 @@ export default function ReviewTripRequest() {
 
 							{/* Action section */}
 							<div className="text-center">
-								<div className="mb-6 p-4 bg-gray-50 rounded-lg text-left">
-									<div
-										className="flex justify-between items-center cursor-pointer"
-										onClick={() => setShowFareInfo(!showFareInfo)}
-									>
+								<div
+									className="mb-6 p-4 bg-gray-50 rounded-lg text-left cursor-pointer"
+									onClick={() => setShowFareInfo(!showFareInfo)}
+								>
+									<div className="flex justify-between items-center">
 										<h3 className="text-sm font-medium text-gray-700">Looking for fare?</h3>
 										<svg
 											className={`w-5 h-5 text-gray-500 transition-transform ${
@@ -149,19 +190,19 @@ export default function ReviewTripRequest() {
 				</div>
 			</div>
 
-			{/* Promo Code Popup */}
+			{/* Modern Promo Popup */}
 			{showPromoPopup && (
-				<div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300">
-					<div className="bg-white rounded-2xl shadow-xl w-full max-w-md overflow-hidden transform transition-all duration-300 scale-100">
+				<div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300 backdrop">
+					<div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all duration-300 scale-100">
 						<div className="p-6">
 							<div className="flex justify-between items-start">
 								<div>
-									<h2 className="text-2xl font-bold text-gray-900">Add Promo Code</h2>
-									<p className="text-gray-500 mt-1">Enter your discount code below</p>
+									<h2 className="text-2xl font-bold text-gray-900">Promo Code</h2>
+									<p className="text-gray-500 mt-1">Enter your discount code</p>
 								</div>
 								<button
 									onClick={() => setShowPromoPopup(false)}
-									className="text-gray-400 hover:text-gray-500 transition-colors"
+									className="text-gray-400 hover:text-gray-500 transition-colors p-1 -mr-1"
 								>
 									<svg
 										xmlns="http://www.w3.org/2000/svg"
@@ -181,7 +222,8 @@ export default function ReviewTripRequest() {
 									value={promoCode}
 									onChange={(e) => setPromoCode(e.target.value)}
 									placeholder="e.g. SUMMER20"
-									className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg font-medium"
+									className="w-full px-4 py-3 border border-gray-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-lg font-medium placeholder-gray-400"
+									autoFocus
 								/>
 								{promoCode && (
 									<button
@@ -199,6 +241,22 @@ export default function ReviewTripRequest() {
 								)}
 							</div>
 
+							{/* Promo Examples */}
+							<div className="mt-4">
+								<h4 className="text-sm font-medium text-gray-500 mb-2">Try these codes:</h4>
+								<div className="flex flex-wrap gap-2">
+									{['SUMMER20', 'FREERIDE', 'WELCOME10'].map((code) => (
+										<button
+											key={code}
+											onClick={() => setPromoCode(code)}
+											className="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-full hover:bg-gray-100 transition-colors hover:border-blue-300"
+										>
+											{code}
+										</button>
+									))}
+								</div>
+							</div>
+
 							<div className="mt-6 grid grid-cols-2 gap-3">
 								<button
 									onClick={() => setShowPromoPopup(false)}
@@ -208,37 +266,38 @@ export default function ReviewTripRequest() {
 								</button>
 								<button
 									onClick={handleApplyPromo}
-									disabled={!promoCode}
-									className={`px-4 py-3 rounded-lg font-medium text-white transition-colors ${
-										promoCode ? 'bg-blue-600 hover:bg-blue-700' : 'bg-gray-300 cursor-not-allowed'
+									disabled={!promoCode || isApplying}
+									className={`px-4 py-3 rounded-lg font-medium text-white transition-colors flex items-center justify-center ${
+										!promoCode || isApplying ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
 									}`}
 								>
-									Apply Code
-								</button>
-							</div>
-						</div>
-
-						{/* Promo code examples */}
-						<div className="border-t border-gray-100 px-6 py-4 bg-gray-50">
-							<h3 className="text-sm font-medium text-gray-500 mb-2">Available Promos</h3>
-							<div className="flex flex-wrap gap-2">
-								<button
-									onClick={() => setPromoCode('SUMMER20')}
-									className="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-full hover:bg-gray-100 transition-colors"
-								>
-									SUMMER20
-								</button>
-								<button
-									onClick={() => setPromoCode('FREERIDE')}
-									className="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-full hover:bg-gray-100 transition-colors"
-								>
-									FREERIDE
-								</button>
-								<button
-									onClick={() => setPromoCode('WELCOME10')}
-									className="px-3 py-1.5 text-sm bg-white border border-gray-200 rounded-full hover:bg-gray-100 transition-colors"
-								>
-									WELCOME10
+									{isApplying ? (
+										<>
+											<svg
+												className="animate-spin -ml-1 mr-2 h-4 w-4 text-white"
+												xmlns="http://www.w3.org/2000/svg"
+												fill="none"
+												viewBox="0 0 24 24"
+											>
+												<circle
+													className="opacity-25"
+													cx="12"
+													cy="12"
+													r="10"
+													stroke="currentColor"
+													strokeWidth="4"
+												></circle>
+												<path
+													className="opacity-75"
+													fill="currentColor"
+													d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+												></path>
+											</svg>
+											Applying...
+										</>
+									) : (
+										'Apply Code'
+									)}
 								</button>
 							</div>
 						</div>

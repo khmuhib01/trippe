@@ -16,6 +16,8 @@ export default function RequestTripPage() {
 	const router = useRouter();
 	const [showViaPoint, setShowViaPoint] = useState(false);
 	const [viaPoint, setViaPoint] = useState('');
+	const [pickupPoint, setPickupPoint] = useState('');
+	const [dropOffPoint, setDropOffPoint] = useState('');
 	const [selectedDate, setSelectedDate] = useState(dayjs());
 	const [selectedTime, setSelectedTime] = useState(dayjs());
 	const [returnDate, setReturnDate] = useState(dayjs());
@@ -26,8 +28,17 @@ export default function RequestTripPage() {
 	const [showPromoPopup, setShowPromoPopup] = useState(false);
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [appliedPromo, setAppliedPromo] = useState(null);
+	const [formValid, setFormValid] = useState(false);
+
+	// Check form validation whenever mandatory fields change
+	useEffect(() => {
+		const isValid = pickupPoint.trim() !== '' && dropOffPoint.trim() !== '' && selectedDate && selectedTime;
+		setFormValid(isValid);
+	}, [pickupPoint, dropOffPoint, selectedDate, selectedTime]);
 
 	const handleNext = () => {
+		if (!formValid) return;
+
 		setIsSubmitting(true);
 		// Simulate form submission
 		setTimeout(() => {
@@ -96,10 +107,14 @@ export default function RequestTripPage() {
 								{/* Location inputs */}
 								<div className="space-y-6">
 									<div>
-										<label className="block text-sm font-medium text-gray-700 mb-1">Pickup point</label>
+										<label className="block text-sm font-medium text-gray-700 mb-1">
+											Pickup point <span className="text-red-500">*</span>
+										</label>
 										<input
 											type="text"
 											placeholder="Search pickup location"
+											value={pickupPoint}
+											onChange={(e) => setPickupPoint(e.target.value)}
 											className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
 											required
 										/>
@@ -134,10 +149,14 @@ export default function RequestTripPage() {
 									)}
 
 									<div>
-										<label className="block text-sm font-medium text-gray-700 mb-1">Drop off point</label>
+										<label className="block text-sm font-medium text-gray-700 mb-1">
+											Drop off point <span className="text-red-500">*</span>
+										</label>
 										<input
 											type="text"
 											placeholder="Search drop off location"
+											value={dropOffPoint}
+											onChange={(e) => setDropOffPoint(e.target.value)}
 											className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
 											required
 										/>
@@ -160,7 +179,9 @@ export default function RequestTripPage() {
 									<h3 className="text-md font-medium text-gray-800 mb-3">Outbound Trip</h3>
 									<div className="grid grid-cols-2 gap-4">
 										<div>
-											<label className="block text-sm font-medium text-gray-700 mb-1">Departure Date</label>
+											<label className="block text-sm font-medium text-gray-700 mb-1">
+												Departure Date <span className="text-red-500">*</span>
+											</label>
 											<DemoContainer components={['DesktopDatePicker']}>
 												<DesktopDatePicker
 													value={selectedDate}
@@ -183,7 +204,9 @@ export default function RequestTripPage() {
 										</div>
 
 										<div>
-											<label className="block text-sm font-medium text-gray-700 mb-1">Departure Time</label>
+											<label className="block text-sm font-medium text-gray-700 mb-1">
+												Departure Time <span className="text-red-500">*</span>
+											</label>
 											<DemoContainer components={['TimePicker']}>
 												<TimePicker
 													value={selectedTime}
@@ -312,12 +335,12 @@ export default function RequestTripPage() {
 									)}
 								</div>
 
-								{/* Next button with loading state */}
+								{/* Next button with loading state and validation */}
 								<button
 									onClick={handleNext}
-									disabled={isSubmitting}
-									className={`w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center ${
-										isSubmitting ? 'opacity-75 cursor-not-allowed' : ''
+									disabled={!formValid || isSubmitting}
+									className={`w-full bg-blue-600 text-white font-medium py-3 px-4 rounded-lg transition duration-200 flex items-center justify-center ${
+										!formValid ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-700'
 									}`}
 								>
 									{isSubmitting ? (

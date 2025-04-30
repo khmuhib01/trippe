@@ -33,11 +33,8 @@ export default function CarRental() {
 							</div>
 							<div className="mt-4 flex justify-end">
 								<Link
-									href="/car-rental/request-trip"
+									href="./car-rental/request-trip"
 									className="inline-flex items-center px-6 py-3 rounded-full bg-blue-500 text-white text-sm font-medium shadow hover:bg-orange-600 transition whitespace-nowrap"
-									onClick={() => {
-										Navigator('/request-trip');
-									}}
 								>
 									Request Trip <FiArrowUpRight className="ml-2 w-4 h-4" />
 								</Link>

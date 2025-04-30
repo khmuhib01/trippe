@@ -1,5 +1,5 @@
 'use client';
-import {Back, Edit} from '@/ui-share/Icon';
+import {Back, Edit, X} from '@/ui-share/Icon';
 import {stPay} from '@/ui-share/Image';
 import Image from 'next/image';
 import {useState, useEffect} from 'react';
@@ -29,6 +29,24 @@ export default function RequestTripPage() {
 	const [isSubmitting, setIsSubmitting] = useState(false);
 	const [appliedPromo, setAppliedPromo] = useState(null);
 	const [formValid, setFormValid] = useState(false);
+	// const [isModalOpen, setIsModalOpen] = useState(false);
+	const [isOpen, setIsOpen] = useState(false);
+	const [selectedVehicle, setSelectedVehicle] = useState('');
+
+	const vehicles = [
+		{name: 'Sedan Car', seats: '4 Seats'},
+		{name: 'Premium Sedan', seats: '4 Seats'},
+		{name: 'Mini Microbus', seats: '7 Seats'},
+		{name: 'Microbus', seats: '10 Seats'},
+		{name: 'Minibus', seats: '22-28 Seats'},
+		{name: 'Luxury Car', seats: '4-7 Seats | BMW, Audi, SUVs & More'},
+		{name: 'Chander Gari', seats: "8-10 Seats | Available at Cox's Bazar & Sreemangal"},
+	];
+
+	const handleVehicleSelect = (vehicle) => {
+		setSelectedVehicle(vehicle.name);
+		setIsModalOpen(false);
+	};
 
 	// Check form validation whenever mandatory fields change
 	useEffect(() => {
@@ -98,7 +116,7 @@ export default function RequestTripPage() {
 												<p className="text-sm text-gray-500">22-28 Seats</p>
 											</div>
 										</div>
-										<button className="text-blue-500 hover:text-blue-700">
+										<button onClick={() => setIsOpen(true)} className="text-blue-500 hover:text-blue-700">
 											<Edit />
 										</button>
 									</div>
@@ -375,6 +393,86 @@ export default function RequestTripPage() {
 						</div>
 					</div>
 				</div>
+
+				{/* Vehicle Selection Modal */}
+				{isOpen && (
+					<div className="fixed inset-0 bg-black/30 backdrop-blur-sm z-50 flex items-center justify-center p-4 transition-opacity duration-300 backdrop">
+						<div className="bg-white rounded-2xl shadow-2xl w-full max-w-md overflow-hidden transform transition-all duration-300 scale-100">
+							<div className="p-6">
+								<div className="flex justify-between items-start">
+									<div>
+										<h2 className="text-2xl font-bold text-gray-900">Select Vehicle</h2>
+										<p className="text-gray-500 mt-1">Choose your preferred vehicle type</p>
+									</div>
+									<button
+										onClick={() => setIsOpen(false)}
+										className="text-gray-400 hover:text-gray-500 transition-colors p-1 -mr-1"
+									>
+										<X className="w-6 h-6" />
+									</button>
+								</div>
+
+								{/* Vehicle List */}
+								<div className="mt-6 space-y-3 max-h-[50vh] overflow-y-auto">
+									{vehicles.map((vehicle, index) => (
+										<div
+											key={index}
+											onClick={() => setSelectedVehicle(vehicle.name)}
+											className={`p-4 rounded-lg border cursor-pointer transition-colors ${
+												selectedVehicle === vehicle.name
+													? 'border-blue-500 bg-blue-50'
+													: 'border-gray-200 hover:bg-gray-50'
+											}`}
+										>
+											<div className="flex justify-between items-center">
+												<div>
+													<p className="font-medium text-gray-900">{vehicle.name}</p>
+													<p className="text-sm text-gray-500">{vehicle.seats}</p>
+												</div>
+												{selectedVehicle === vehicle.name && (
+													<svg
+														xmlns="http://www.w3.org/2000/svg"
+														className="h-5 w-5 text-blue-500"
+														viewBox="0 0 20 20"
+														fill="currentColor"
+													>
+														<path
+															fillRule="evenodd"
+															d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z"
+															clipRule="evenodd"
+														/>
+													</svg>
+												)}
+											</div>
+										</div>
+									))}
+								</div>
+
+								{/* Action Buttons */}
+								<div className="mt-6 grid grid-cols-2 gap-3">
+									<button
+										onClick={() => setIsOpen(false)}
+										className="px-4 py-3 border border-gray-200 rounded-lg font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+									>
+										Cancel
+									</button>
+									<button
+										onClick={() => {
+											// Save the selected vehicle
+											setIsOpen(false);
+										}}
+										disabled={!selectedVehicle}
+										className={`px-4 py-3 rounded-lg font-medium text-white transition-colors ${
+											!selectedVehicle ? 'bg-gray-300 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'
+										}`}
+									>
+										Save Changes
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				)}
 
 				{/* Modern Promo Popup */}
 				{showPromoPopup && (

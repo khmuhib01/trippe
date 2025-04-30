@@ -211,17 +211,41 @@ export default function MainFooter() {
 					<div className="col-span-2 sm:col-span-1 md:col-span-2 lg:col-span-1">
 						<h4 className="text-lg font-semibold mb-4">We accept</h4>
 						<div className="flex flex-wrap items-center gap-3">
-							<Image src={stPay} alt="ST Pay" className="border-1 border-gray-200" height={50} width={50} />
-							<Image src={amexCard} alt="Amex Card" className="border-1 border-gray-200" height={50} width={50} />
-							<Image src={bkash} alt="Bkash" className="border-1 border-gray-200" height={50} width={50} />
-							<Image src={dbbl} alt="DBBL" className="border-1 border-gray-200" height={50} width={50} />
-							<Image src={dinnersClub} alt="Dinners Club" className="border-1 border-gray-200" height={50} width={50} />
-							<Image src={masterCard} alt="Master Card" className="border-1 border-gray-200" height={50} width={50} />
-							<Image src={nagad} alt="Nagad" className="border-1 border-gray-200" height={50} width={50} />
-							<Image src={ok} alt="OK" className="border-1 border-gray-200" height={50} width={50} />
-							<Image src={tap} alt="Tap" className="border-1 border-gray-200" height={50} width={50} />
-							<Image src={upay} alt="Upay" className="border-1 border-gray-200" height={50} width={50} />
-							<Image src={visaCard} alt="Visa Card" className="border-1 border-gray-200" height={50} width={50} />
+							<Image src={stPay} alt="ST Pay" className="border-1 border-gray-200 rounded-md" height={50} width={50} />
+							<Image
+								src={amexCard}
+								alt="Amex Card"
+								className="border-1 border-gray-200 rounded-md"
+								height={50}
+								width={50}
+							/>
+							<Image src={bkash} alt="Bkash" className="border-1 border-gray-200 rounded-md" height={50} width={50} />
+							<Image src={dbbl} alt="DBBL" className="border-1 border-gray-200 rounded-md" height={50} width={50} />
+							<Image
+								src={dinnersClub}
+								alt="Dinners Club"
+								className="border-1 border-gray-200 rounded-md"
+								height={50}
+								width={50}
+							/>
+							<Image
+								src={masterCard}
+								alt="Master Card"
+								className="border-1 border-gray-200 rounded-md"
+								height={50}
+								width={50}
+							/>
+							<Image src={nagad} alt="Nagad" className="border-1 border-gray-200 rounded-md" height={50} width={50} />
+							<Image src={ok} alt="OK" className="border-1 border-gray-200 rounded-md" height={50} width={50} />
+							<Image src={tap} alt="Tap" className="border-1 border-gray-200 rounded-md" height={50} width={50} />
+							<Image src={upay} alt="Upay" className="border-1 border-gray-200 rounded-md" height={50} width={50} />
+							<Image
+								src={visaCard}
+								alt="Visa Card"
+								className="border-1 border-gray-200 rounded-md"
+								height={50}
+								width={50}
+							/>
 						</div>
 					</div>
 				</div>
